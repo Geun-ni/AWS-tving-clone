@@ -1,0 +1,29 @@
+.DS_Store
+**/.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Editor and OS files
+.idea/
+.vscode/*
+!.vscode/
+!.vscode/extensions.json
+
+# Docker and local runtime artifacts
+*.log
+docker-compose.override.yml
+
+# Frontend dependency/build artifacts if students add tooling later
+node_modules/
+dist/
+build/

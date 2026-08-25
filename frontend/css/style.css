@@ -1,0 +1,360 @@
+/* TVING 클론 - 실제 TVING 사이트 참고 스타일 */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, 'Malgun Gothic', sans-serif;
+    background-color: #000;
+    color: #fff;
+    line-height: 1.5;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* 헤더 - TVING 스타일 */
+.header {
+    background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: background 0.3s;
+}
+
+.header.scrolled { background: rgba(0,0,0,0.95); }
+
+.header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -1px;
+}
+
+.logo span { color: #ff153c; }
+
+.nav { display: flex; gap: 28px; flex: 1; }
+.nav a { font-size: 15px; color: rgba(255,255,255,0.7); font-weight: 500; }
+.nav a:hover { color: #fff; }
+
+.auth-buttons, .user-menu { display: flex; align-items: center; gap: 10px; }
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    font-weight: 500;
+}
+
+.btn-primary { background: #ff153c; color: #fff; }
+.btn-primary:hover { background: #d4112f; }
+.btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; }
+.btn-outline:hover { border-color: #ff153c; color: #ff153c; }
+.btn-lg { padding: 12px 28px; font-size: 15px; border-radius: 6px; }
+
+/* 메인 배너 */
+.hero-banner {
+    width: 100%;
+    height: 500px;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0010 50%, #2d0015 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 60px;
+}
+
+.hero-banner h1 { font-size: 42px; font-weight: 800; margin-bottom: 12px; }
+.hero-banner p { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 24px; }
+
+/* 콘텐츠 섹션 */
+.content-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.section-more {
+    font-size: 13px;
+    color: #888;
+}
+
+/* 가로 스크롤 리스트 - TVING 핵심 레이아웃 */
+.content-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+    scroll-snap-type: x mandatory;
+}
+
+.content-scroll::-webkit-scrollbar { height: 0; }
+
+.content-card {
+    min-width: 160px;
+    max-width: 160px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    scroll-snap-align: start;
+}
+
+.content-card:hover { transform: scale(1.05); }
+
+.content-thumbnail {
+    width: 100%;
+    aspect-ratio: 2/3;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.content-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+
+.content-info h3 {
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.content-info p { font-size: 11px; color: #888; }
+
+/* TOP 20 랭킹 */
+.top-section { background: #0a0a0a; padding: 32px 0; }
+
+.top-scroll {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 0 24px 12px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.top-scroll::-webkit-scrollbar { height: 0; }
+
+.top-card {
+    min-width: 140px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.top-card:hover { transform: scale(1.05); }
+
+.top-rank {
+    position: absolute;
+    bottom: 40px;
+    left: -4px;
+    font-size: 48px;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    font-style: italic;
+    z-index: 2;
+}
+
+.top-thumbnail {
+    width: 140px;
+    aspect-ratio: 2/3;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #1a1a1a;
+}
+
+.top-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+
+.top-title {
+    font-size: 12px;
+    margin-top: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+}
+
+/* 콘텐츠 그리드 (목록 페이지) */
+.contents-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 80px 24px 40px;
+}
+
+.contents-page h2 { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+/* 콘텐츠 상세 */
+.content-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 80px 24px 40px;
+}
+
+.content-detail-header {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+}
+
+.content-detail-poster { border-radius: 8px; overflow: hidden; }
+.content-detail-poster img { width: 100%; }
+
+.content-detail-info h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+.content-detail-info .meta { display: flex; gap: 12px; margin-bottom: 16px; font-size: 14px; color: #888; }
+.content-detail-info .synopsis { font-size: 14px; color: #aaa; line-height: 1.8; margin-bottom: 20px; }
+
+.action-buttons { display: flex; gap: 12px; }
+
+/* 에피소드 */
+.episode-section { margin-top: 32px; }
+.episode-section h2 { font-size: 18px; margin-bottom: 16px; }
+
+.episode-list { display: flex; flex-direction: column; gap: 8px; }
+
+.episode-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.episode-card:hover { background: #252525; }
+.episode-number { font-size: 16px; font-weight: 700; color: #ff153c; min-width: 30px; }
+.episode-title { flex: 1; font-size: 14px; }
+.episode-duration { font-size: 13px; color: #888; }
+
+/* 찜/시청기록 */
+.list-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 24px 40px;
+}
+
+.list-page h2 { font-size: 22px; margin-bottom: 20px; }
+
+.history-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.history-thumbnail { width: 120px; height: 70px; border-radius: 4px; overflow: hidden; background: #333; }
+.history-thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+.history-info { flex: 1; }
+.history-info h3 { font-size: 14px; margin-bottom: 4px; }
+.history-info p { font-size: 12px; color: #888; }
+
+.progress-bar { width: 100%; height: 3px; background: #333; border-radius: 2px; margin-top: 6px; }
+.progress-fill { height: 100%; background: #ff153c; border-radius: 2px; }
+
+/* 필터 */
+.filter-bar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+.filter-btn {
+    padding: 8px 18px;
+    border: 1px solid #333;
+    border-radius: 20px;
+    background: transparent;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 13px;
+}
+.filter-btn.active, .filter-btn:hover { border-color: #ff153c; background: #ff153c; color: #fff; }
+
+/* 폼 */
+.form-container {
+    max-width: 380px;
+    margin: 100px auto 40px;
+    padding: 36px;
+    background: #1a1a1a;
+    border-radius: 12px;
+}
+
+.form-container h2 { text-align: center; margin-bottom: 28px; }
+
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; margin-bottom: 6px; font-size: 13px; color: #aaa; }
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #333;
+    border-radius: 6px;
+    background: #0a0a0a;
+    color: #fff;
+    font-size: 14px;
+}
+.form-group input:focus { outline: none; border-color: #ff153c; }
+
+/* 챗봇 배너 */
+.chatbot-banner {
+    background: linear-gradient(135deg, #1a0010 0%, #ff153c 200%);
+    padding: 48px 24px;
+    text-align: center;
+    margin-top: 40px;
+    border-radius: 12px;
+    max-width: 1400px;
+    margin: 40px auto;
+}
+
+.chatbot-banner h2 { font-size: 24px; margin-bottom: 8px; }
+.chatbot-banner p { color: rgba(255,255,255,0.7); margin-bottom: 16px; }
+
+/* 푸터 */
+.footer {
+    background: #0a0a0a;
+    border-top: 1px solid #1a1a1a;
+    padding: 32px 24px;
+    text-align: center;
+    color: #555;
+    font-size: 12px;
+    margin-top: 60px;
+}
+
+@media (max-width: 768px) {
+    .header-inner { gap: 16px; flex-wrap: wrap; }
+    .content-detail-header { grid-template-columns: 1fr; }
+    .hero-banner { height: 350px; }
+    .hero-banner h1 { font-size: 28px; }
+    .content-card { min-width: 130px; max-width: 130px; }
+}

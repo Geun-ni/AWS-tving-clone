@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 - TVING</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header scrolled">
+        <div class="header-inner">
+            <a href="/" class="logo"><img src="https://image.tving.com/ntgs/operation/logo/2023/09/18/1695032536_1.svg" alt="TVING" height="24"></a>
+            <nav class="nav">
+                <a href="/pages/contents.html?category=드라마">드라마</a>
+                <a href="/pages/contents.html?category=예능">예능</a>
+                <a href="/pages/contents.html?category=영화">영화</a>
+                <a href="/pages/contents.html?category=애니">애니</a>
+                <a href="/pages/contents.html">전체</a>
+            </nav>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="/pages/login.html" class="btn btn-outline">로그인</a>
+                <a href="/pages/register.html" class="btn btn-primary">회원가입</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display:none;">
+                <a href="/pages/wishlist.html" style="color:#aaa;font-size:13px;">찜</a>
+                <a href="/pages/history.html" style="color:#aaa;font-size:13px;">기록</a>
+                <span id="user-name" style="color:#ccc;font-size:13px;"></span>
+                <button class="btn btn-outline" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="form-container">
+        <h2>회원가입</h2>
+        <form id="register-form" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label for="username">닉네임</label>
+                <input type="text" id="username" placeholder="닉네임을 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <label for="email">이메일</label>
+                <input type="email" id="email" placeholder="이메일을 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <label for="password">비밀번호</label>
+                <input type="password" id="password" placeholder="비밀번호를 입력하세요 (8자 이상)" required minlength="8">
+            </div>
+            <div class="form-group">
+                <label for="password-confirm">비밀번호 확인</label>
+                <input type="password" id="password-confirm" placeholder="비밀번호를 다시 입력하세요" required minlength="8">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">가입하기</button>
+            </div>
+        </form>
+        <p style="text-align:center;margin-top:16px;font-size:13px;color:#888;">
+            이미 회원이신가요? <a href="/pages/login.html" style="color:#ff153c;">로그인</a>
+        </p>
+    </main>
+
+    <footer class="footer">
+        <p>주식회사 티빙 | CJ AI 클라우드 엔지니어 부트캠프 실습 프로젝트</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('password-confirm').value;
+
+            if (password !== passwordConfirm) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            try {
+                await api.post('/api/auth/register', { username, email, password });
+                alert('회원가입이 완료되었습니다. 로그인해주세요.');
+                window.location.href = '/pages/login.html';
+            } catch (err) {
+                alert(err.detail || '회원가입에 실패했습니다. 다시 시도해주세요.');
+            }
+        }
+    </script>
+</body>
+</html>

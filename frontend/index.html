@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVING</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <a href="/" class="logo"><img src="https://image.tving.com/ntgs/operation/logo/2023/09/18/1695032536_1.svg" alt="TVING" height="24"></a>
+            <nav class="nav">
+                <a href="/pages/contents.html?category=드라마">드라마</a>
+                <a href="/pages/contents.html?category=예능">예능</a>
+                <a href="/pages/contents.html?category=영화">영화</a>
+                <a href="/pages/contents.html?category=애니">애니</a>
+                <a href="/pages/contents.html">전체</a>
+            </nav>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="/pages/login.html" class="btn btn-outline">로그인</a>
+                <a href="/pages/register.html" class="btn btn-primary">회원가입</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display:none;">
+                <a href="/pages/wishlist.html" style="color:#aaa;font-size:13px;">찜</a>
+                <a href="/pages/history.html" style="color:#aaa;font-size:13px;">기록</a>
+                <span id="user-name" style="color:#ccc;font-size:13px;"></span>
+                <button class="btn btn-outline" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 메인 배너 -->
+    <section class="hero-banner">
+        <div>
+            <h1>지금, TVING에서</h1>
+            <p>AI가 추천하는 나만의 콘텐츠를 만나보세요</p>
+            <a href="/pages/contents.html" class="btn btn-primary btn-lg">콘텐츠 보기</a>
+        </div>
+    </section>
+
+    <!-- 오늘의 TOP 20 -->
+    <section class="top-section">
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">오늘의 TOP 20</h2>
+            </div>
+        </div>
+        <div class="top-scroll" id="top-scroll"></div>
+    </section>
+
+    <!-- 드라마 -->
+    <section class="content-section">
+        <div class="section-header">
+            <h2 class="section-title">인기 드라마</h2>
+            <a href="/pages/contents.html?category=드라마" class="section-more">더보기 ›</a>
+        </div>
+        <div class="content-scroll" id="drama-grid"></div>
+    </section>
+
+    <!-- 영화 -->
+    <section class="content-section">
+        <div class="section-header">
+            <h2 class="section-title">인기 영화</h2>
+            <a href="/pages/contents.html?category=영화" class="section-more">더보기 ›</a>
+        </div>
+        <div class="content-scroll" id="movie-grid"></div>
+    </section>
+
+    <!-- 예능 -->
+    <section class="content-section">
+        <div class="section-header">
+            <h2 class="section-title">인기 예능</h2>
+            <a href="/pages/contents.html?category=예능" class="section-more">더보기 ›</a>
+        </div>
+        <div class="content-scroll" id="variety-grid"></div>
+    </section>
+
+    <!-- AI 챗봇 배너 -->
+    <section class="chatbot-banner">
+        <h2>🤖 AI 콘텐츠 추천</h2>
+        <p>시청 이력 기반 맞춤 콘텐츠를 추천받아보세요</p>
+        <a href="http://localhost:8501" target="_blank" class="btn btn-primary btn-lg">AI 추천 받기</a>
+    </section>
+
+    <!-- 푸터 -->
+    <footer class="footer">
+        <p>주식회사 티빙 | CJ AI 클라우드 엔지니어 부트캠프 실습 프로젝트</p>
+        <p style="margin-top:4px;">본 사이트는 교육 목적으로 제작된 클론 프로젝트입니다.</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            checkAuth();
+            await loadTop20();
+            await loadContentsByCategory('드라마', 'drama-grid');
+            await loadContentsByCategory('영화', 'movie-grid');
+            await loadContentsByCategory('예능', 'variety-grid');
+        });
+
+        // 스크롤 시 헤더 배경
+        window.addEventListener('scroll', () => {
+            document.getElementById('header').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        async function loadTop20() {
+            try {
+                const data = await api.get('/api/contents?limit=20');
+                const contents = data.contents || data;
+                const scroll = document.getElementById('top-scroll');
+                scroll.innerHTML = contents.slice(0, 20).map((c, i) => `
+                    <div class="top-card" onclick="location.href='/pages/content-detail.html?id=${c.id}'">
+                        <span class="top-rank">${i + 1}</span>
+                        <div class="top-thumbnail">
+                            <img src="${c.thumbnail_url || ''}" alt="${c.title}" onerror="this.style.display='none'">
+                        </div>
+                        <p class="top-title">${c.title}</p>
+                    </div>
+                `).join('');
+            } catch (e) { console.error('TOP20 로드 실패:', e); }
+        }
+
+        async function loadContentsByCategory(category, gridId) {
+            try {
+                const data = await api.get(`/api/contents?category=${encodeURIComponent(category)}&limit=10`);
+                const contents = data.contents || data;
+                const grid = document.getElementById(gridId);
+                grid.innerHTML = contents.map(c => `
+                    <div class="content-card" onclick="location.href='/pages/content-detail.html?id=${c.id}'">
+                        <div class="content-thumbnail">
+                            <img src="${c.thumbnail_url || ''}" alt="${c.title}" onerror="this.style.display='none'">
+                        </div>
+                        <div class="content-info">
+                            <h3>${c.title}</h3>
+                            <p>${c.genre || ''}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) { console.error(`${category} 로드 실패:`, e); }
+        }
+    </script>
+</body>
+</html>

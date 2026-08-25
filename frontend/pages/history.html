@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시청 기록 - TVING</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header scrolled">
+        <div class="header-inner">
+            <a href="/" class="logo"><img src="https://image.tving.com/ntgs/operation/logo/2023/09/18/1695032536_1.svg" alt="TVING" height="24"></a>
+            <nav class="nav">
+                <a href="/pages/contents.html?category=드라마">드라마</a>
+                <a href="/pages/contents.html?category=예능">예능</a>
+                <a href="/pages/contents.html?category=영화">영화</a>
+                <a href="/pages/contents.html?category=애니">애니</a>
+                <a href="/pages/contents.html">전체</a>
+            </nav>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="/pages/login.html" class="btn btn-outline">로그인</a>
+                <a href="/pages/register.html" class="btn btn-primary">회원가입</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display:none;">
+                <a href="/pages/wishlist.html" style="color:#aaa;font-size:13px;">찜</a>
+                <a href="/pages/history.html" style="color:#aaa;font-size:13px;">기록</a>
+                <span id="user-name" style="color:#ccc;font-size:13px;"></span>
+                <button class="btn btn-outline" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="list-page">
+        <h2>시청 기록</h2>
+        <div id="history-list">
+            <p style="color:#888;">로딩 중...</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>주식회사 티빙 | CJ AI 클라우드 엔지니어 부트캠프 실습 프로젝트</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            if (!requireAuth()) return;
+            loadHistory();
+        });
+
+        async function loadHistory() {
+            const list = document.getElementById('history-list');
+            try {
+                const data = await api.get('/api/history');
+                const items = data.history || data;
+                if (!items.length) {
+                    list.innerHTML = '<p style="color:#888;">시청 기록이 없습니다.</p>';
+                    return;
+                }
+                list.innerHTML = items.map(item => {
+                    const progress = item.watch_position && item.duration
+                        ? Math.min((item.watch_position / item.duration) * 100, 100)
+                        : item.progress || 0;
+                    return `
+                        <a href="/pages/content-detail.html?id=${item.content_id || item.id}" class="history-card">
+                            <div class="history-thumbnail">
+                                <img src="${item.thumbnail_url || item.thumbnail || item.poster || ''}" alt="${item.title}" onerror="this.style.display='none'">
+                            </div>
+                            <div class="history-info">
+                                <h3>${item.title}</h3>
+                                <p>${item.episode_number ? '에피소드 ' + item.episode_number : ''} ${item.watched_at ? '· ' + new Date(item.watched_at).toLocaleDateString() : ''}</p>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width:${progress}%"></div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } catch (err) {
+                list.innerHTML = '<p style="color:#f66;">시청 기록을 불러올 수 없습니다.</p>';
+            }
+        }
+    </script>
+</body>
+</html>

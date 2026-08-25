@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>콘텐츠 - TVING</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header scrolled">
+        <div class="header-inner">
+            <a href="/" class="logo"><img src="https://image.tving.com/ntgs/operation/logo/2023/09/18/1695032536_1.svg" alt="TVING" height="24"></a>
+            <nav class="nav">
+                <a href="/pages/contents.html?category=드라마">드라마</a>
+                <a href="/pages/contents.html?category=예능">예능</a>
+                <a href="/pages/contents.html?category=영화">영화</a>
+                <a href="/pages/contents.html?category=애니">애니</a>
+                <a href="/pages/contents.html">전체</a>
+            </nav>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="/pages/login.html" class="btn btn-outline">로그인</a>
+                <a href="/pages/register.html" class="btn btn-primary">회원가입</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display:none;">
+                <a href="/pages/wishlist.html" style="color:#aaa;font-size:13px;">찜</a>
+                <a href="/pages/history.html" style="color:#aaa;font-size:13px;">기록</a>
+                <span id="user-name" style="color:#ccc;font-size:13px;"></span>
+                <button class="btn btn-outline" onclick="logout()">로그아웃</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="contents-page">
+        <h2>콘텐츠</h2>
+        <div class="filter-bar" id="filter-bar">
+            <button class="filter-btn active" data-category="">전체</button>
+            <button class="filter-btn" data-category="드라마">드라마</button>
+            <button class="filter-btn" data-category="영화">영화</button>
+            <button class="filter-btn" data-category="예능">예능</button>
+            <button class="filter-btn" data-category="다큐">다큐</button>
+            <button class="filter-btn" data-category="애니">애니</button>
+        </div>
+        <div class="content-grid" id="content-grid"></div>
+    </main>
+
+    <footer class="footer">
+        <p>주식회사 티빙 | CJ AI 클라우드 엔지니어 부트캠프 실습 프로젝트</p>
+    </footer>
+
+    <script src="/js/app.js"></script>
+    <script>
+        let currentCategory = getQueryParam('category') || '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            setActiveFilter();
+            loadContents();
+            setupFilterButtons();
+        });
+
+        function setActiveFilter() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === currentCategory);
+            });
+        }
+
+        function setupFilterButtons() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentCategory = btn.dataset.category;
+                    setActiveFilter();
+                    loadContents();
+                    const url = currentCategory
+                        ? `/pages/contents.html?category=${currentCategory}`
+                        : '/pages/contents.html';
+                    history.replaceState(null, '', url);
+                });
+            });
+        }
+
+        async function loadContents() {
+            const grid = document.getElementById('content-grid');
+            grid.innerHTML = '<p style="color:#888;">로딩 중...</p>';
+            try {
+                const url = currentCategory
+                    ? `/api/contents?category=${encodeURIComponent(currentCategory)}&limit=50`
+                    : '/api/contents?limit=50';
+                const data = await api.get(url);
+                const contents = data.contents || data;
+                if (!contents.length) {
+                    grid.innerHTML = '<p style="color:#888;">콘텐츠가 없습니다.</p>';
+                    return;
+                }
+                grid.innerHTML = contents.map(item => `
+                    <a href="/pages/content-detail.html?id=${item.id}" class="content-card">
+                        <div class="content-thumbnail">
+                            <img src="${item.thumbnail_url || item.thumbnail || item.poster || ''}" alt="${item.title}" onerror="this.style.display='none'">
+                        </div>
+                        <div class="content-info">
+                            <h3>${item.title}</h3>
+                            <p>${item.category || ''}</p>
+                        </div>
+                    </a>
+                `).join('');
+            } catch (err) {
+                grid.innerHTML = '<p style="color:#f66;">콘텐츠를 불러올 수 없습니다.</p>';
+            }
+        }
+    </script>
+</body>
+</html>
