@@ -1,7 +1,7 @@
 """TVING 클론 - FastAPI 메인 애플리케이션"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth, items, chat
+from routers import auth, items, chat, ops
 
 app = FastAPI(
     title="TVING 클론 API",
@@ -20,6 +20,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/auth", tags=["인증"])
 app.include_router(items.router, prefix="/api", tags=["콘텐츠/찜/시청기록"])
 app.include_router(chat.router, prefix="/api", tags=["AI 챗봇"])
+app.include_router(ops.router, prefix="/ops", tags=["운영 장애 시뮬레이션"])
 
 @app.get("/")
 def root():
